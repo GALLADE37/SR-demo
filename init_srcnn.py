@@ -131,11 +131,6 @@ class EvalDataset(Dataset):
         self.upscale_factor = upscale_factor
         self.withupsampling = upsampling
         self.patch_size = patch_size
-        # self.augment = v2.Compose([
-        #     v2.RandomCrop(size=[patch_size, patch_size]),
-        #     v2.RandomHorizontalFlip(p=0.5),
-        #     v2.RandomVerticalFlip(p=0.5)
-        # ])
 
     def __getitem__(self, index):
         HR_img = Image.open(self.HR_img_list[index]).convert('L')
@@ -150,73 +145,3 @@ class EvalDataset(Dataset):
 
     def __len__(self):
         return len(self.HR_img_list)
-
-# class TestDataset(Dataset):
-#     def __init__(self, imgpath, patch_size=None, upscale_factor=None, upsampling=False):
-#         super(TestDataset, self).__init__()
-#         self.imgpath = imgpath
-#         self.patch_size = patch_size
-#         self.upscale_factor = upscale_factor
-#         self.withupsampling = upsampling
-#         self.HR_img_list = get_all_tif_files(self.imgpath)
-#
-#     def __getitem__(self, index):
-#         HR_img = Image.open(self.HR_img_list[index]).convert('L')
-#
-#         if self.patch_size:
-#             if (HR_img.size[0] < self.patch_size):
-#                 HR_img = ImageOps.crop(HR_img, border=HR_img.size[0] - self.patch_size)
-#             if (HR_img.size[1] < self.patch_size):
-#                 HR_img = ImageOps.crop(HR_img, border=HR_img.size[1] - self.patch_size)
-#
-#             sp1, sp2 = HR_img.size[0] // 2 - self.patch_size // 2, HR_img.size[1] // 2 - self.patch_size // 2
-#             HR_patch = HR_img.crop((sp1, sp2, sp1 + self.patch_size, sp2 + self.patch_size))
-#
-#         else:
-#             HR_patch = HR_img.crop((0, 0, HR_img.size[0] - HR_img.size[0] % self.upscale_factor,
-#                                     HR_img.size[1] - HR_img.size[1] % self.upscale_factor))
-#
-#         LR_patch = make_LR_patch(HR_patch, self.upscale_factor, self.withupsampling)
-#
-#         return torch.as_tensor(data_initialization(LR_patch)), torch.as_tensor(data_initialization(HR_patch))
-#
-#     def __len__(self):
-#         return len(os.listdir(self.imgpath))
-#
-# class TestDataset_temp(Dataset):
-#     def __init__(self, imgpath, patch_size=None, upscale_factor=None, upsampling=False):
-#         super(TestDataset_temp, self).__init__()
-#         self.imgpath = imgpath
-#         self.patch_size = patch_size
-#         self.upscale_factor = upscale_factor
-#         self.withupsampling = upsampling
-#         self.HR_img_list = get_all_tif_files(self.imgpath)
-#
-#     def __getitem__(self, index):
-#         HR_img = Image.open(self.HR_img_list[index]).convert('L')
-#
-#         if self.patch_size:
-#             if (HR_img.size[0] < self.patch_size):
-#                 HR_img = ImageOps.crop(HR_img, border=HR_img.size[0] - self.patch_size)
-#             if (HR_img.size[1] < self.patch_size):
-#                 HR_img = ImageOps.crop(HR_img, border=HR_img.size[1] - self.patch_size)
-#
-#             sp1, sp2 = HR_img.size[0] // 2 - self.patch_size // 2, HR_img.size[1] // 2 - self.patch_size // 2
-#             HR_patch = HR_img.crop((sp1, sp2, sp1 + self.patch_size, sp2 + self.patch_size))
-#
-#         else:
-#             HR_patch = HR_img.crop((0, 0, HR_img.size[0] - HR_img.size[0] % self.upscale_factor,
-#                                     HR_img.size[1] - HR_img.size[1] % self.upscale_factor))
-#
-#         LR_patch = make_LR_patch(HR_patch, self.upscale_factor, self.withupsampling)
-#
-#         LR_patch = torch.as_tensor(data_initialization(LR_patch))
-#         HR_patch = torch.as_tensor(data_initialization(HR_patch))
-#
-#         LR_patch = torch.cat((LR_patch[:,:32,:], LR_patch[:,32:,:]), dim=-1)
-#         HR_patch = torch.cat((HR_patch[:,:128,:], HR_patch[:,128:,:]), dim=-1)
-#
-#         return torch.cat((LR_patch, LR_patch, LR_patch, LR_patch), dim=1), torch.cat((HR_patch, HR_patch, HR_patch, HR_patch), dim=1)
-#
-#     def __len__(self):
-#         return len(os.listdir(self.imgpath))
