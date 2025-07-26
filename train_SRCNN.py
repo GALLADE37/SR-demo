@@ -12,7 +12,7 @@ import torch.backends.cudnn as cudnn
 from tqdm import tqdm
 
 from init_srcnn import TrainDataset, EvalDataset, calc_psnr, AverageMeter
-from model.SRCNN import SRCNN
+from SRCNN import SRCNN
 
 # eval:
 # 2x: 33.26
