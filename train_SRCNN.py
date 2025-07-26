@@ -14,10 +14,6 @@ from tqdm import tqdm
 from init_srcnn import TrainDataset, EvalDataset, calc_psnr, AverageMeter
 from SRCNN import SRCNN
 
-# eval:
-# 2x: 33.26
-# 4x: 27.26
-
 def train():
     parser = argparse.ArgumentParser()
     parser.add_argument('--train_dir', type=str, default='/media/gallade/disk2/AID/train')
@@ -25,8 +21,8 @@ def train():
     parser.add_argument('--save_weight_dir', type=str, default='SRCNNx4.pth')  ###
     parser.add_argument('--upscale_factor', type=int, default=4)  ###
     parser.add_argument('--preupsampling', type=bool, default=True)  ###
-    parser.add_argument('--lr', type=float, default=5e-4)  # SRCNN:5e-4  RCAN:1e-4
-    parser.add_argument('--train_patch_size', type=int, default=32) # x2:32  x4:64  x8:128
+    parser.add_argument('--lr', type=float, default=5e-4) 
+    parser.add_argument('--train_patch_size', type=int, default=32) 
     parser.add_argument('--valid_patch_size', type=int, default=256)
     parser.add_argument('--batch_size', type=int, default=32)
     parser.add_argument('--num-epochs', type=int, default=1000)
@@ -40,7 +36,6 @@ def train():
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
     model = SRCNN().to(device)
-    # model.load_state_dict(torch.load("SRCNNx2.pth"))
 
     criterion = nn.L1Loss()
     optimizer = optim.Adam(model.parameters(), lr=args.lr)
@@ -58,7 +53,7 @@ def train():
 
     best_psnr = 0
     no_improve_count = 0
-    early_stop_patience = 20
+    early_stop_patience = 20 ###
 
     for epoch in range(args.num_epochs):
         model.train()
@@ -82,7 +77,7 @@ def train():
                 t.set_postfix(loss=f'{epoch_losses.avg:.6f}')
                 t.update(1)
 
-        if epoch % 1 == 0:
+        if epoch % 1 == 0: ###
             model.eval()
             epoch_psnr = AverageMeter()
 
